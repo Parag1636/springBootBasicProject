@@ -34,21 +34,21 @@ public class EmployeeController {
     }
 
 
-    @PostMapping
-    public ResponseEntity<EmployeeEntity> createEmpById(@RequestBody EmployeeEntity employeeEntity){
+    @PostMapping("{name}")
+    public ResponseEntity<EmployeeEntity> createEmpById(@RequestBody EmployeeEntity employeeEntity, @PathVariable String name){
         try {
-            employeeService.saveEmployee(employeeEntity);
-            return new ResponseEntity<>(HttpStatus.OK);
+            employeeService.saveEmployee(employeeEntity, name);
+            return new ResponseEntity<>(employeeEntity, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
 
-    @DeleteMapping("id/{myId}")
-    public ResponseEntity<?> employeeEntityDeleteById(@PathVariable String myId){
+    @DeleteMapping("id/{name}/{myId}")
+    public ResponseEntity<?> employeeEntityDeleteById(@PathVariable String myId, @PathVariable String name){
         if(myId != null && !myId.isEmpty()){
-            employeeService.deleteById(myId);
+            employeeService.deleteById(myId, name);
             return new ResponseEntity<>(HttpStatus.OK);
         }else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -56,8 +56,18 @@ public class EmployeeController {
     }
 
 
-    @PutMapping("id/{myId}")
-    public String employeeUpdateDeleteById(@PathVariable String myId, @RequestBody EmployeeEntity newEntity){
+    @PutMapping("id/{name}/{myId}")
+    public String employeeUpdateDeleteById(
+            @PathVariable String myId,
+            @RequestBody EmployeeEntity newEntity,
+            @PathVariable String name)
+    {
+        EmployeeEntity old = employeeService.findById(myId).orElse(null);
+        if(old != null){
+            old.setName(newEntity.getName() != null && !newEntity.getName().equals("") ? newEntity.getName() : old.getName());
+            old.setDepartment(newEntity.getDepartment() != null && !newEntity.getDepartment().equals("") ? newEntity.getDepartment() : old.getDepartment());
+            employeeService.saveEmployee(old);
+        }
         return "Updated";
     }
 }

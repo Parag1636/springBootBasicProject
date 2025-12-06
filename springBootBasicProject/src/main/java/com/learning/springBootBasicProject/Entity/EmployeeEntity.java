@@ -16,6 +16,7 @@ import java.util.Date;
 // If we use @Data then it is equal to getter, setter, allArgsConstructor, ToString, ToEqualsAndHashCode
 @Data
 @Setter
+@NoArgsConstructor
 public class EmployeeEntity {
 
     @Id
@@ -23,9 +24,5 @@ public class EmployeeEntity {
 
     private String name;
     private String department;
-    private Date timestamp;
-
-    public EmployeeEntity() {
-        this.timestamp = new Date(); // adds current timestamp automatically
-    }
+    private Date timestamp = new Date();
 }
