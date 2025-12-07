@@ -5,6 +5,7 @@ import com.learning.springBootBasicProject.Entity.UserEntity;
 import com.learning.springBootBasicProject.Repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,10 +19,12 @@ public class EmployeeService {
     @Autowired
     private UserService userService;
 
+    @Transactional
     public void saveEmployee(EmployeeEntity employeeEntity, String name){
         UserEntity userByName = userService.findByName(name);
         EmployeeEntity saveEmployee = employeeRepository.save(employeeEntity);
         userByName.getEmployeeEntities().add(saveEmployee);
+        userByName.setName(null);
         userService.saveUser(userByName);
     }
 
