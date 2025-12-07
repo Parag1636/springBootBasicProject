@@ -65,6 +65,9 @@ public class EmployeeController {
         EmployeeEntity old = employeeService.findById(myId).orElse(null);
         if(old != null){
             old.setName(newEntity.getName() != null && !newEntity.getName().equals("") ? newEntity.getName() : old.getName());
+
+
+
             old.setDepartment(newEntity.getDepartment() != null && !newEntity.getDepartment().equals("") ? newEntity.getDepartment() : old.getDepartment());
             employeeService.saveEmployee(old);
         }
