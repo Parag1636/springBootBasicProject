@@ -21,11 +21,15 @@ public class EmployeeService {
 
     @Transactional
     public void saveEmployee(EmployeeEntity employeeEntity, String name){
-        UserEntity userByName = userService.findByName(name);
-        EmployeeEntity saveEmployee = employeeRepository.save(employeeEntity);
-        userByName.getEmployeeEntities().add(saveEmployee);
-        userByName.setName(null);
-        userService.saveUser(userByName);
+        try {
+            UserEntity userByName = userService.findByName(name);
+            EmployeeEntity saveEmployee = employeeRepository.save(employeeEntity);
+            userByName.getEmployeeEntities().add(saveEmployee);
+            //userByName.setName(null);
+            userService.saveUser(userByName);
+        } catch (Exception e) {
+            throw new RuntimeException("An error occured while saving the entry. " + e);
+        }
     }
 
     public void saveEmployee(EmployeeEntity employeeEntity){
