@@ -15,7 +15,7 @@ import java.util.List;
 public class UserEntity {
 
     @Id
-    private String Id;
+    private String id;
 
     @NonNull
     @Indexed(unique = true)
@@ -26,5 +26,7 @@ public class UserEntity {
 
     @DBRef
     private List<EmployeeEntity> employeeEntities = new ArrayList<>();
+
+    private List<String> roles;
 
 }

@@ -4,17 +4,29 @@ import com.learning.springBootBasicProject.Entity.EmployeeEntity;
 import com.learning.springBootBasicProject.Entity.UserEntity;
 import com.learning.springBootBasicProject.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-@Component
+@Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     public void saveUser(UserEntity userEntity){
+        userRepository.save(userEntity);
+    }
+
+    public void saveNewUser(UserEntity userEntity){
+        userEntity.setPassword(passwordEncoder.encode(userEntity.getPassword()));
+        userEntity.setRoles(Arrays.asList("User"));
         userRepository.save(userEntity);
     }
 
